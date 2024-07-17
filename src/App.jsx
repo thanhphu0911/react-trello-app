@@ -8,10 +8,46 @@ function App() {
     useAppContext();
   console.log("todos: ", todos);
 
-  const onDragEnd = React.useCallback((e) => {
+  const onDragEnd = (e) => {
     // the only one that is required
     console.log("onDragEnd:", e);
-  }, []);
+    // const type = e.type;
+    // const source = e.source;
+    // const destination = e.destination;
+    // const draggableId  = e.draggableId;
+
+    const { type, source, destination, draggableId } = e;
+    if (!destination) return;
+    // drag & drop list
+    if (type === "LIST") {
+      onDragList({
+        destination,
+        source,
+        draggableId,
+      });
+      return;
+    }
+
+    // drag & drop card same list
+    if (source.draggableId === destination.draggableId) {
+      onDragCardSameList({
+        destination,
+        source,
+        draggableId,
+      });
+      return;
+    }
+
+    // drag & drop card diff list
+    if (source.draggableId !== destination.draggableId) {
+      onDragCardDiffList({
+        destination,
+        source,
+        draggableId,
+      });
+      return;
+    }
+  };
 
   return (
     <>
@@ -42,12 +78,12 @@ function App() {
                   className="listContainer"
                   {...provided.droppableProps}
                 >
-                  {todos.colums.map((column, index) => {
+                  {todos.columns.map((column, index) => {
                     const listItem = todos.lists[column];
                     const cards = listItem.cards.map(
                       (card) => todos.cards[card]
                     );
-                    console.log("cards: ", cards);
+
                     return (
                       <CardList
                         index={index}

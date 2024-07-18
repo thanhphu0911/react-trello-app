@@ -29,7 +29,7 @@ function App() {
     }
 
     // drag & drop card same list
-    if (source.draggableId === destination.draggableId) {
+    if (source.droppableId === destination.droppableId) {
       onDragCardSameList({
         destination,
         source,
@@ -39,7 +39,7 @@ function App() {
     }
 
     // drag & drop card diff list
-    if (source.draggableId !== destination.draggableId) {
+    if (source.droppableId !== destination.droppableId) {
       onDragCardDiffList({
         destination,
         source,

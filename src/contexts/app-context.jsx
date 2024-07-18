@@ -4,34 +4,63 @@ const AppContext = React.createContext();
 
 export const AppProvider = ({ children }) => {
   const [todos, setTodos] = React.useState({
-    columns: ["list1", "list2", "list3"],
+    columns: ["list1", "list2", "list3"], // render list item UI
     lists: {
-      list1: { id: "list1", title: "List1", cards: ["card1-1", "card1-2"] },
-      list2: { id: "list2", title: "List2", cards: ["card2-1"] },
-      list3: { id: "list3", title: "List3", cards: [] },
+      list1: {
+        id: "list1",
+        title: "List 1",
+        cards: ["card1-1", "card1-2", "card1-3", "card1-4"],
+      },
+      list2: {
+        id: "list2",
+        title: "List 2",
+        cards: ["card2-1"],
+      },
+      list3: {
+        id: "list3",
+        title: "List 3",
+        cards: [],
+      },
     },
     cards: {
       "card1-1": {
         id: "card1-1",
         title: "card1-1",
         description: "javascript",
-        author: "nathan",
-        avatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=8",
+        author: "tony",
+        avatar: "xxx",
         meta: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
       },
       "card1-2": {
         id: "card1-2",
         title: "card1-2",
         description: "angular",
-        avatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=8",
+        author: "tony",
+        avatar: "xxx",
         meta: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
       },
-
+      "card1-3": {
+        id: "card1-3",
+        title: "card1-3",
+        description: "javascript",
+        author: "tony",
+        avatar: "xxx",
+        meta: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
+      },
+      "card1-4": {
+        id: "card1-4",
+        title: "card1-4",
+        description: "angular",
+        author: "tony",
+        avatar: "xxx",
+        meta: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
+      },
       "card2-1": {
-        id: "card2-1",
+        id: "card12-1",
         title: "card2-1",
         description: "vue",
-        avatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=8",
+        author: "tony",
+        avatar: "xxx",
         meta: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
       },
     },
@@ -73,12 +102,36 @@ export const AppProvider = ({ children }) => {
         },
       };
     });
-
-    console.log("onDragCardSameList: ", { sourceList, cards });
   }
 
   //TODO: drag & drop card in different list
-  function onDragCardDiffList({ source, destination, draggableId }) {}
+  function onDragCardDiffList({ source, destination, draggableId }) {
+    const droppableIdSource = source.droppableId;
+    const droppableIdDestination = destination.droppableId;
+
+    const sourceCards = todos.lists[droppableIdSource].cards;
+    sourceCards.splice(source.index, 1);
+
+    const destinationCards = todos.lists[droppableIdDestination].cards;
+    destinationCards.splice(destination.index, 0, draggableId);
+
+    setTodos((prevState) => {
+      return {
+        ...prevState,
+        lists: {
+          ...prevState.lists,
+          [droppableIdSource]: {
+            ...prevState.lists[droppableIdSource],
+            cards: sourceCards,
+          },
+          [droppableIdDestination]: {
+            ...prevState.lists[droppableIdDestination],
+            cards: destinationCards,
+          },
+        },
+      };
+    });
+  }
 
   return (
     <AppContext.Provider
